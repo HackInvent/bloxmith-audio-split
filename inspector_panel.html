@@ -1,0 +1,74 @@
+<div class="cw-block-inspector cw-audio-split-inspector" data-block-inspector-root data-audio-split-inspector-root data-node-id="{{ node_id }}" data-node-type="{{ node_type }}">
+  <div class="inspector-selection {{ summary_hidden }}" data-node-type="{{ node_type }}">
+    <div class="inspector-node-card">
+      <div class="inspector-node-icon">{{ node_icon }}</div>
+      <div class="inspector-node-copy">
+        <strong>{{ node_title }}</strong>
+        <span>{{ node_kind }}</span>
+      </div>
+      <span class="inspector-node-tag">{{ node_tag }}</span>
+    </div>
+    <div class="inspector-tabs">
+      <button class="inspector-tab {{ general_active }}" data-inspector-tab="general" type="button">General</button>
+      <button class="inspector-tab {{ ports_active }} {{ ports_tab_hidden }}" data-inspector-tab="ports" type="button" {{ ports_tab_disabled }}>Ports</button>
+    </div>
+  </div>
+
+  <div class="inspector-view {{ general_hidden }}" data-inspector-panel-tab="general">
+    <div class="field-group {{ title_hidden }}">
+      <label>Nom du node</label>
+      <input data-node-title-input type="text" placeholder="{{ node_title_placeholder }}" value="{{ node_title }}" />
+    </div>
+
+    {{ audio_path_browser_html }}
+
+    <div class="field-grid two-cols">
+      <div class="field-group">
+        <label for="audioSplitChunkDurationSec">Taille secondes</label>
+        <input id="audioSplitChunkDurationSec" data-audio-split-chunk-duration-sec type="number" min="1" step="1" value="{{ chunk_duration_sec }}" />
+      </div>
+      <div class="field-group">
+        <label for="audioSplitMaxChunkSizeMb">Taille max Mo</label>
+        <input id="audioSplitMaxChunkSizeMb" data-audio-split-max-chunk-size-mb type="number" min="1" step="1" value="{{ max_chunk_size_mb }}" />
+      </div>
+    </div>
+
+    {{ work_dir_browser_html }}
+
+    <div class="field-group">
+      <label class="checkbox-line">
+        <input data-audio-split-experimental-audio-filter-enabled type="checkbox" {{ experimental_audio_filter_enabled_checked }} />
+        <span>Appliquer un filtre audio ffmpeg experimental</span>
+      </label>
+      <textarea
+        data-audio-split-experimental-audio-filter
+        rows="3"
+        spellcheck="false"
+        placeholder="highpass=f=90,lowpass=f=7600,afftdn=nr=8,loudnorm=I=-10:TP=-2:LRA=8"
+      >{{ experimental_audio_filter }}</textarea>
+    </div>
+    <div class="inspector-actions">
+      <button class="solid-btn" data-block-apply type="button" disabled>Appliquer</button>
+    </div>
+  </div>
+
+  <div class="inspector-view {{ ports_hidden }}" data-inspector-panel-tab="ports">
+    <div class="ports-editor-section">
+      <div class="ports-editor-header">
+        <span class="group-label">Entrees</span>
+        <span class="ports-editor-actions">
+          <button class="ghost-btn add-port-btn {{ add_mcp_input_hidden }}" data-add-mcp-input-port type="button" {{ add_mcp_input_disabled }}>+ MCP</button>
+          <button class="ghost-btn add-port-btn {{ add_input_hidden }}" data-add-input-port type="button" {{ add_input_disabled }}>+ Ajouter une entree</button>
+        </span>
+      </div>
+      <div class="ports-editor-list">{{ inputs_html }}</div>
+    </div>
+    <div class="ports-editor-section">
+      <div class="ports-editor-header">
+        <span class="group-label">Sorties</span>
+        <button class="ghost-btn add-port-btn {{ add_output_hidden }}" data-add-output-port type="button" {{ add_output_disabled }}>+ Ajouter une sortie</button>
+      </div>
+      <div class="ports-editor-list">{{ outputs_html }}</div>
+    </div>
+  </div>
+</div>

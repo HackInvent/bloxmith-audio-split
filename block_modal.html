@@ -1,0 +1,59 @@
+<div class="modal-panel block-config-modal cw-audio-split-inspector" role="dialog" aria-modal="true" aria-labelledby="{{ node_id }}BlockModalTitle" data-generic-block-modal-root data-audio-split-modal-root data-node-id="{{ node_id }}" data-node-kind="{{ node_kind }}">
+  <div class="modal-header">
+    <div>
+      <span class="panel-kicker">Bloc {{ node_kind_title }}</span>
+      <h2 id="{{ node_id }}BlockModalTitle">{{ node_title }}</h2>
+    </div>
+    <div class="modal-actions">
+      <button class="ghost-btn" data-close-block-modal type="button">Fermer</button>
+    </div>
+  </div>
+  <div class="block-config-modal-body">
+    <section class="ports-editor-section">
+      <div class="ports-editor-header"><span class="group-label">Identité</span></div>
+      {{ title_field_html }}
+    </section>
+    <section class="ports-editor-section">
+      <div class="ports-editor-header"><span class="group-label">Configuration</span></div>
+      {{ audio_path_browser_html }}
+      <div class="field-grid two-cols">
+        <div class="field-group">
+          <label for="audioSplitModalChunkDurationSec">Taille secondes</label>
+          <input id="audioSplitModalChunkDurationSec" data-audio-split-chunk-duration-sec type="number" min="1" step="1" value="{{ chunk_duration_sec }}" />
+        </div>
+        <div class="field-group">
+          <label for="audioSplitModalMaxChunkSizeMb">Taille max Mo</label>
+          <input id="audioSplitModalMaxChunkSizeMb" data-audio-split-max-chunk-size-mb type="number" min="1" step="1" value="{{ max_chunk_size_mb }}" />
+        </div>
+      </div>
+      {{ work_dir_browser_html }}
+      <div class="field-group">
+        <label class="checkbox-line">
+          <input data-audio-split-experimental-audio-filter-enabled type="checkbox" {{ experimental_audio_filter_enabled_checked }} />
+          <span>Appliquer un filtre audio ffmpeg experimental</span>
+        </label>
+        <textarea
+          data-audio-split-experimental-audio-filter
+          rows="3"
+          spellcheck="false"
+          placeholder="highpass=f=90,lowpass=f=7600,afftdn=nr=8,loudnorm=I=-10:TP=-2:LRA=8"
+        >{{ experimental_audio_filter }}</textarea>
+      </div>
+      <div class="inspector-actions">
+        <button class="solid-btn" data-audio-split-apply type="button" disabled>Appliquer</button>
+      </div>
+    </section>
+    <section class="ports-editor-section">
+      <div class="ports-editor-header"><span class="group-label">Attributs techniques</span></div>
+      {{ config_fields_html }}
+    </section>
+    <section class="ports-editor-section">
+      <div class="ports-editor-header"><span class="group-label">Ports</span></div>
+      {{ ports_html }}
+    </section>
+    <section class="ports-editor-section">
+      <div class="ports-editor-header"><span class="group-label">Dernier état</span></div>
+      {{ runtime_html }}
+    </section>
+  </div>
+</div>

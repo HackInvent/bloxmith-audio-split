@@ -1,0 +1,53 @@
+{
+  "kind": "audio_split",
+  "title": "Audio split",
+  "ports": {
+    "inputs": [
+      {
+        "id": 1,
+        "name": "audio",
+        "title": "Audio",
+        "accepts": [
+          "file/path",
+          "audio/*",
+          "message/*"
+        ],
+        "multiplicity": "many",
+        "required": false,
+        "execution_requirement": "required_for_execution"
+      }
+    ],
+    "outputs": [
+      {
+        "id": 1,
+        "name": "liste",
+        "title": "Chunks",
+        "emits": [
+          "application/json",
+          "message/*"
+        ],
+        "multiplicity": "many"
+      }
+    ]
+  },
+  "config": {
+    "audio_path": "",
+    "chunk_duration_sec": 60,
+    "max_chunk_size_mb": 24,
+    "work_dir": "",
+    "experimental_audio_filter_enabled": false,
+    "experimental_audio_filter": "highpass=f=90,lowpass=f=7600,afftdn=nr=8,loudnorm=I=-10:TP=-2:LRA=8"
+  },
+  "port_capabilities": {
+    "can_add_inputs": false,
+    "can_add_outputs": false
+  },
+  "runtime": {
+    "initial_state": "waiting",
+    "runtime_executable": true,
+    "active_worker": true,
+    "file_browser": true,
+    "centralized_executor": "generic",
+    "centralized_dependency_mode": "all_inputs"
+  }
+}
