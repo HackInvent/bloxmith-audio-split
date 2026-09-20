@@ -82,16 +82,6 @@ class AudioSplitBlock(BlockDefinition):
     """Autonomous block implementation for `AudioSplitBlock`."""
     kind = "audio_split"
 
-    def ui_assets(self, surface: str = "modal") -> list[dict[str, str]]:
-        """Return block-owned frontend assets for the requested UI surface.
-
-        Args:
-            surface: UI surface requesting assets.
-        """
-        if surface not in {"modal", "inspector_panel"}:
-            return []
-        return [{"kind": "js", "path": "assets/js/inspector_panel.js"}]
-
     def render_node_card(self, *, node: dict[str, Any], payload: dict[str, Any] | None = None) -> dict[str, Any]:
         """Render the Audio Split canvas card body from the block-owned template."""
 

@@ -1,7 +1,9 @@
 {
   "kind": "audio_split",
   "version": "0.1.0",
-  "bloxsmith_compatibility": ["1.0.9"],
+  "bloxsmith_compatibility": [
+    "1.0.9"
+  ],
   "tested_with_bloxsmith": "1.0.9",
   "title": "Audio split",
   "ports": {
@@ -52,5 +54,19 @@
     "file_browser": true,
     "centralized_executor": "generic",
     "centralized_dependency_mode": "all_inputs"
+  },
+  "ui_assets": {
+    "modal": [
+      {
+        "kind": "js",
+        "path": "assets/js/inspector_panel.js"
+      }
+    ],
+    "inspector_panel": [
+      {
+        "kind": "js",
+        "path": "assets/js/inspector_panel.js"
+      }
+    ]
   }
 }
