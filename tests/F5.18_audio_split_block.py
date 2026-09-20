@@ -139,13 +139,13 @@ def assert_audio_split_payload(payload: str, *, expected_count: int) -> list[dic
     expect(len(parsed) == expected_count, f"Audio split doit emettre {expected_count} chunk(s).")
     previous_start = -1.0
     for index, wrapper in enumerate(parsed, start=1):
-        expect(isinstance(wrapper, dict) and "item" in wrapper, "Chaque entree doit etre compatible List: {item: ...}.")
+        expect(isinstance(wrapper, dict) and "item" in wrapper, "Every entry must be List-compatible: {item: ...}.")
         item = wrapper["item"]
-        expect(item.get("chunk_index") == index, "Les chunks doivent etre indexes dans l'ordre.")
+        expect(item.get("chunk_index") == index, "The chunks must be indexed in order.")
         expect(str(item.get("path") or ""), "Every item must contain path.")
-        expect(Path(item["path"]).is_file(), "Le fichier chunk doit exister.")
-        expect(float(item.get("start_sec") or 0.0) > previous_start, "Les chunks doivent progresser dans le temps.")
-        expect(int(item.get("size_bytes") or 0) > 0, "Chaque item doit exposer size_bytes.")
+        expect(Path(item["path"]).is_file(), "The chunk file must exist.")
+        expect(float(item.get("start_sec") or 0.0) > previous_start, "The chunks must progress in time.")
+        expect(int(item.get("size_bytes") or 0) > 0, "Every item must expose size_bytes.")
         previous_start = float(item.get("start_sec") or 0.0)
     return parsed
 
@@ -185,7 +185,7 @@ def run_audio_split_case(runtime_mode: str) -> None:
         payload = run.get("output_values", {}).get(f"{audio_split_id}:1", {}).get("value") or ""
         parsed = assert_audio_split_payload(payload, expected_count=3)
         log_text = f"{logs}\n{node_logs}"
-        expect("chunk 1" in log_text and "[done] Audio split" in log_text, "Audio split doit tracer chaque chunk.")
+        expect("chunk 1" in log_text and "[done] Audio split" in log_text, "Audio split must trace every chunk.")
         expect(parsed[0]["item"]["path"].endswith(".wav"), "Audio split doit conserver l'extension source.")
         if runtime_mode == "zeromq_active":
             expect(
@@ -225,12 +225,12 @@ def test_direct_runtime() -> None:
             result.metadata.get("audio_split", {}).get("experimental_audio_filter") == filter_value,
             "The metadata must expose the applied experimental filter.",
         )
-        expect("filtre audio experimental" in "\n".join(result.logs), "Les logs doivent tracer le filtre experimental.")
-        expect("ffmpeg " in "\n".join(result.logs) and "-af" in "\n".join(result.logs), "Les logs doivent tracer la commande ffmpeg filtree.")
+        expect("filtre audio experimental" in "\n".join(result.logs), "The logs must trace the experimental filter.")
+        expect("ffmpeg " in "\n".join(result.logs) and "-af" in "\n".join(result.logs), "The logs must trace the filtered ffmpeg command.")
         filtered_chunk = Path(parsed[0]["item"]["path"])
         expect(
             wav_rms(filtered_chunk) < wav_rms(audio_path) * 0.50,
-            "Le filtre highpass/lowpass brutal doit modifier le signal audio mesure.",
+            "The harsh highpass/lowpass filter must change the measured audio signal.",
         )
 
 
@@ -238,15 +238,15 @@ def test_inspector_contract() -> None:
     node = audio_split_node("fixtures/audio.wav", chunk_duration_sec=90, max_chunk_size_mb=10)
     rendered = render_block_inspector_panel("audio_split", {"node": node})
     html = str(rendered.get("html") or "")
-    expect("data-audio-split-inspector-root" in html, "Le panneau inspecteur Audio split doit venir du bloc.")
-    expect("data-path-browser" in html, "Le panneau Audio split doit utiliser le path browser commun.")
-    expect('data-path-browser-select-mode="file"' in html, "Le chemin audio doit utiliser la selection fichier.")
-    expect('data-path-browser-select-mode="directory"' in html, "Le repertoire de travail doit utiliser la selection dossier.")
-    expect("data-audio-split-chunk-duration-sec" in html, "Le panneau doit exposer la duree des chunks.")
-    expect("data-audio-split-max-chunk-size-mb" in html, "Le panneau doit exposer la taille max.")
-    expect("data-audio-split-work-dir" in html, "Le panneau doit exposer le repertoire temporaire des splits.")
-    expect("data-audio-split-experimental-audio-filter" in html, "Le panneau doit exposer le filtre experimental.")
-    expect("data-block-apply" in html, "Le panneau Audio split doit exposer le bouton Appliquer.")
+    expect("data-audio-split-inspector-root" in html, "The Audio split inspector panel must come from the block.")
+    expect("data-path-browser" in html, "The Audio split panel must use the shared path browser.")
+    expect('data-path-browser-select-mode="file"' in html, "The audio path must use the file selection.")
+    expect('data-path-browser-select-mode="directory"' in html, "The work directory must use the folder selection.")
+    expect("data-audio-split-chunk-duration-sec" in html, "The panel must expose the chunk duration.")
+    expect("data-audio-split-max-chunk-size-mb" in html, "The panel must expose the maximum size.")
+    expect("data-audio-split-work-dir" in html, "The panel must expose the temporary split directory.")
+    expect("data-audio-split-experimental-audio-filter" in html, "The panel must expose the experimental filter.")
+    expect("data-block-apply" in html, "The Audio split panel must expose the Apply button.")
     expect(rendered.get("context", {}).get("inspector_title") == "Audio split", "The inspector title must come from the block.")
 
     ports_rendered = render_block_inspector_panel("audio_split", {"node": node, "inspector_tab": "ports"})
@@ -282,9 +282,9 @@ def test_inspector_contract() -> None:
 
     modal = render_block_modal("audio_split", {"node": node, "runtime": {}})
     modal_html = str(modal.get("html") or "")
-    expect("data-audio-split-modal-root" in modal_html, "Le modal Audio split doit venir du bloc.")
-    expect("data-path-browser" in modal_html, "Le modal Audio split doit utiliser le path browser commun.")
-    expect("data-audio-split-apply" in modal_html, "Le modal Audio split doit exposer son action Appliquer.")
+    expect("data-audio-split-modal-root" in modal_html, "The Audio split modal must come from the block.")
+    expect("data-path-browser" in modal_html, "The Audio split modal must use the shared path browser.")
+    expect("data-audio-split-apply" in modal_html, "The Audio split modal must expose its Apply action.")
 
     modal_result = handle_block_ui_action(
         "audio_split",

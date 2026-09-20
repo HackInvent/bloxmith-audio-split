@@ -213,9 +213,9 @@ class AudioSplitBlock(BlockDefinition):
 
         return render_path_browser_control(
             input_id=input_id,
-            label="Répertoire temporaire des splits",
+            label="Temporary split directory",
             value=str(config.get("work_dir") or ""),
-            placeholder="Laisser vide pour le dossier temporaire du run",
+            placeholder="Leave empty for the run temporary folder",
             input_attrs="data-audio-split-work-dir",
             select_mode="directory",
         )
@@ -531,9 +531,9 @@ class AudioSplitBlock(BlockDefinition):
         try:
             duration_sec = float((result.stdout or "").strip())
         except ValueError as exc:
-            raise AudioSplitBlockError("Audio split: duree audio illisible par ffprobe.") from exc
+            raise AudioSplitBlockError("Audio split: audio duration unreadable by ffprobe.") from exc
         if duration_sec <= 0:
-            raise AudioSplitBlockError("Audio split: duree audio vide ou invalide.")
+            raise AudioSplitBlockError("Audio split: empty or invalid audio duration.")
         return duration_sec
 
     def _split_audio(
