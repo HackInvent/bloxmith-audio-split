@@ -135,14 +135,14 @@ def direct_context(*, root_dir: Path, run_dir: Path, config: dict[str, Any], inp
 
 def assert_audio_split_payload(payload: str, *, expected_count: int) -> list[dict[str, Any]]:
     parsed = json.loads(payload)
-    expect(isinstance(parsed, list), "Audio split doit emettre une liste JSON.")
+    expect(isinstance(parsed, list), "Audio split must emit a JSON list.")
     expect(len(parsed) == expected_count, f"Audio split doit emettre {expected_count} chunk(s).")
     previous_start = -1.0
     for index, wrapper in enumerate(parsed, start=1):
         expect(isinstance(wrapper, dict) and "item" in wrapper, "Chaque entree doit etre compatible List: {item: ...}.")
         item = wrapper["item"]
         expect(item.get("chunk_index") == index, "Les chunks doivent etre indexes dans l'ordre.")
-        expect(str(item.get("path") or ""), "Chaque item doit contenir path.")
+        expect(str(item.get("path") or ""), "Every item must contain path.")
         expect(Path(item["path"]).is_file(), "Le fichier chunk doit exister.")
         expect(float(item.get("start_sec") or 0.0) > previous_start, "Les chunks doivent progresser dans le temps.")
         expect(int(item.get("size_bytes") or 0) > 0, "Chaque item doit exposer size_bytes.")
@@ -181,7 +181,7 @@ def run_audio_split_case(runtime_mode: str) -> None:
         logs = "\n".join(run.get("logs", []))
         audio_split_id = node_id_by_title(run, "Audio split")
         node_logs = "\n".join(run.get("node_logs", {}).get(audio_split_id, []))
-        expect(run.get("status") == "success", f"Le run Audio split {runtime_mode} doit reussir.")
+        expect(run.get("status") == "success", f"The Audio split {runtime_mode} run must succeed.")
         payload = run.get("output_values", {}).get(f"{audio_split_id}:1", {}).get("value") or ""
         parsed = assert_audio_split_payload(payload, expected_count=3)
         log_text = f"{logs}\n{node_logs}"
@@ -190,7 +190,7 @@ def run_audio_split_case(runtime_mode: str) -> None:
         if runtime_mode == "zeromq_active":
             expect(
                 run.get("results", {}).get(audio_split_id, {}).get("transport") == "zeromq_active",
-                "audio_split doit etre execute via zeromq_active.",
+                "audio_split must run through zeromq_active.",
             )
 
 
@@ -216,14 +216,14 @@ def test_direct_runtime() -> None:
         )
         expect(result.status == "success", "Audio split direct doit reussir.")
         parsed = assert_audio_split_payload(result.outputs[0].value, expected_count=2)
-        expect(result.metadata.get("audio_split", {}).get("chunk_count") == 2, "Le metadata doit exposer chunk_count.")
+        expect(result.metadata.get("audio_split", {}).get("chunk_count") == 2, "The metadata must expose chunk_count.")
         expect(
             result.metadata.get("audio_split", {}).get("experimental_audio_filter_enabled") is True,
-            "Le metadata doit exposer l'activation du filtre experimental.",
+            "The metadata must expose whether the experimental filter is on.",
         )
         expect(
             result.metadata.get("audio_split", {}).get("experimental_audio_filter") == filter_value,
-            "Le metadata doit exposer le filtre experimental applique.",
+            "The metadata must expose the applied experimental filter.",
         )
         expect("filtre audio experimental" in "\n".join(result.logs), "Les logs doivent tracer le filtre experimental.")
         expect("ffmpeg " in "\n".join(result.logs) and "-af" in "\n".join(result.logs), "Les logs doivent tracer la commande ffmpeg filtree.")
@@ -247,15 +247,15 @@ def test_inspector_contract() -> None:
     expect("data-audio-split-work-dir" in html, "Le panneau doit exposer le repertoire temporaire des splits.")
     expect("data-audio-split-experimental-audio-filter" in html, "Le panneau doit exposer le filtre experimental.")
     expect("data-block-apply" in html, "Le panneau Audio split doit exposer le bouton Appliquer.")
-    expect(rendered.get("context", {}).get("inspector_title") == "Audio split", "Le titre inspecteur doit venir du bloc.")
+    expect(rendered.get("context", {}).get("inspector_title") == "Audio split", "The inspector title must come from the block.")
 
     ports_rendered = render_block_inspector_panel("audio_split", {"node": node, "inspector_tab": "ports"})
     ports_html = str(ports_rendered.get("html") or "")
-    expect('data-inspector-panel-tab="ports"' in ports_html, "Le panneau doit exposer l'onglet Ports.")
-    expect("data-add-input-port" in ports_html, "Le panneau doit garder l'action input visible dans le DOM.")
-    expect("data-add-output-port" in ports_html, "Le panneau doit garder l'action output visible dans le DOM.")
-    expect("data-add-input-port type=\"button\" disabled" in ports_html, "Audio split ne doit pas permettre d'ajouter un input.")
-    expect("data-add-output-port type=\"button\" disabled" in ports_html, "Audio split ne doit pas permettre d'ajouter une sortie.")
+    expect('data-inspector-panel-tab="ports"' in ports_html, "The panel must expose the Ports tab.")
+    expect("data-add-input-port" in ports_html, "The panel must keep the add-input action visible in the DOM.")
+    expect("data-add-output-port" in ports_html, "The panel must keep the add-output action visible in the DOM.")
+    expect("data-add-input-port type=\"button\" disabled" in ports_html, "Audio split must not allow adding an input.")
+    expect("data-add-output-port type=\"button\" disabled" in ports_html, "Audio split must not allow adding an output.")
 
     result = handle_block_ui_action(
         "audio_split",
@@ -273,12 +273,12 @@ def test_inspector_contract() -> None:
         },
     )
     config = result.get("node_patch", {}).get("config", {})
-    expect(config.get("chunk_duration_sec") == 1, "La duree doit etre clamp a 1 seconde minimum.")
-    expect(config.get("max_chunk_size_mb") == 1, "La taille max doit etre clamp a 1 Mo minimum.")
-    expect(config.get("audio_path") == "./next.wav", "Le chemin audio doit etre conserve.")
-    expect(config.get("work_dir") == "./chunks", "Le repertoire temporaire doit etre conserve.")
-    expect(config.get("experimental_audio_filter_enabled") is True, "Le filtre experimental doit etre activable.")
-    expect(config.get("experimental_audio_filter") == "highpass=f=120,lowpass=f=5000", "Le filtre experimental doit etre editable.")
+    expect(config.get("chunk_duration_sec") == 1, "The duration must be clamped to one second minimum.")
+    expect(config.get("max_chunk_size_mb") == 1, "The maximum size must be clamped to 1 MB minimum.")
+    expect(config.get("audio_path") == "./next.wav", "The audio path must be kept.")
+    expect(config.get("work_dir") == "./chunks", "The temporary directory must be kept.")
+    expect(config.get("experimental_audio_filter_enabled") is True, "The experimental filter must be switchable.")
+    expect(config.get("experimental_audio_filter") == "highpass=f=120,lowpass=f=5000", "Le filtre experimental must be editable.")
 
     modal = render_block_modal("audio_split", {"node": node, "runtime": {}})
     modal_html = str(modal.get("html") or "")
@@ -302,8 +302,8 @@ def test_inspector_contract() -> None:
         },
     )
     modal_config = modal_result.get("node_patch", {}).get("config", {})
-    expect(modal_config.get("audio_path") == "./modal.wav", "Le modal doit persister le chemin audio.")
-    expect(modal_config.get("work_dir") == "./modal-chunks", "Le modal doit persister le repertoire temporaire.")
+    expect(modal_config.get("audio_path") == "./modal.wav", "The modal must persist the audio path.")
+    expect(modal_config.get("work_dir") == "./modal-chunks", "The modal must persist the temporary directory.")
 
 
 def test_removed_output_dir_config_is_ignored() -> None:
@@ -314,16 +314,16 @@ def test_removed_output_dir_config_is_ignored() -> None:
 
 def test_introspection() -> None:
     description = describe_block("audio_split")
-    expect(description["title"] == "Audio split", "Le bloc Audio split doit etre decouvert par introspection.")
-    expect(description["default_config"]["chunk_duration_sec"] == 60, "La duree par defaut doit etre introspectee.")
-    expect(description["default_config"]["max_chunk_size_mb"] == 24, "La taille max par defaut doit etre introspectee.")
+    expect(description["title"] == "Audio split", "The Audio split block must be discovered by introspection.")
+    expect(description["default_config"]["chunk_duration_sec"] == 60, "The default duration must be introspected.")
+    expect(description["default_config"]["max_chunk_size_mb"] == 24, "The default maximum size must be introspected.")
     expect(
         description["default_config"]["experimental_audio_filter_enabled"] is False,
-        "Le filtre experimental doit etre desactive par defaut.",
+        "The experimental filter must be off by default.",
     )
-    expect(description["capabilities"]["runtime_executable"], "audio_split doit etre runtime_executable.")
-    expect(description["capabilities"]["active_worker"], "audio_split doit etre active_worker.")
-    expect(description["capabilities"]["file_browser"], "audio_split doit exposer le browse fichier/repertoire.")
+    expect(description["capabilities"]["runtime_executable"], "audio_split must be runtime_executable.")
+    expect(description["capabilities"]["active_worker"], "audio_split must be active_worker.")
+    expect(description["capabilities"]["file_browser"], "audio_split must expose file and directory browsing.")
 
 
 def main() -> None:
@@ -336,7 +336,7 @@ def main() -> None:
     test_inspector_contract()
     test_removed_output_dir_config_is_ignored()
     test_introspection()
-    expect(AudioSplitBlock().kind == "audio_split", "Le bloc Audio split doit exposer son kind.")
+    expect(AudioSplitBlock().kind == "audio_split", "The Audio split block must expose its kind.")
     print("[ok] F5.18_audio_split_block")
 
 

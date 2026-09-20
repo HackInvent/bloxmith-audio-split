@@ -240,7 +240,7 @@ class AudioSplitBlock(BlockDefinition):
             for key, value in config.items()
             if str(key) not in hidden_keys
         ]
-        return "\n".join(fields) if fields else '<div class="ports-editor-empty">Aucun attribut technique.</div>'
+        return "\n".join(fields) if fields else '<div class="ports-editor-empty">No technical attribute.</div>'
 
     def preview_received(self, *, node: Any, **runtime_services: Any) -> str:
         """Return a compact preview value for runtime display surfaces.
@@ -647,11 +647,11 @@ class AudioSplitBlock(BlockDefinition):
                 return AudioChunk(output_path, index, start_sec, duration, size_bytes)
             if duration <= 1.0:
                 raise AudioSplitBlockError(
-                    "Audio split: un chunk de 1 seconde depasse encore la taille max "
+                    "Audio split: a one-second chunk still exceeds the maximum size "
                     f"({self._format_bytes(size_bytes)} > {self._format_bytes(max_chunk_size_bytes)})."
                 )
             if attempts >= 16:
-                raise AudioSplitBlockError("Audio split: impossible de respecter la taille max apres plusieurs essais.")
+                raise AudioSplitBlockError("Audio split: the maximum size could not be met after several attempts.")
             ratio = max_chunk_size_bytes / max(1, size_bytes)
             duration = max(1.0, duration * max(0.10, min(0.90, ratio * 0.92)))
 

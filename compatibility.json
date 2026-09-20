@@ -5,7 +5,7 @@
   "maintained_by": "HackInvent",
   "source": {
     "algorithm": "block-source-v1",
-    "sha256": "487c8bbe703155ad956de25f2ea2dfaccd9e48339f407e2fe3c0012fe52cc71c"
+    "sha256": "e96c5fc587d0597b1543c6a44e03fc25bbcee01f8f3734a0dcb612164177e822"
   },
   "bloxsmith_compatibility": [
     "1.0.9"
@@ -16,14 +16,14 @@
       "bloxsmith_version": "1.0.9",
       "framework_commit": "57e7ba724774c646df175ab870afd601d8aa4cd5",
       "framework_source_sha256": "48b1b447ea65fcc6e6b828b2a6b624febe02d878814142b18917e4a5fc40963e",
-      "tested_at": "2026-09-20T00:34:42.054664+00:00",
+      "tested_at": "2026-09-20T20:41:50.888473+00:00",
       "status": "passed",
       "installation_mode": "bundled",
       "suite_paths": [
         "tests/F5.18_audio_split_block.py"
       ],
       "suite_count": 1,
-      "report_sha256": "b7c347b04fde092abd88a15643a0bec13b35e66875f4e42d858be242db04ff80"
+      "report_sha256": "3b3f35be9f1e7f2dd7b37ef0f5343b81cfbc8105855969c4c829793682de36e1"
     }
   ]
 }
