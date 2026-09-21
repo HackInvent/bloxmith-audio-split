@@ -440,7 +440,7 @@ class AudioSplitBlock(BlockDefinition):
             raise AudioSplitBlockError(f"Audio split: fichier introuvable: {path_text}")
         if path.suffix.lower() not in AUDIO_SPLIT_SUPPORTED_EXTENSIONS:
             supported = ", ".join(AUDIO_SPLIT_SUPPORTED_EXTENSIONS)
-            raise AudioSplitBlockError(f"Audio split: format audio non supporte ({path.suffix or 'sans extension'}). Formats: {supported}")
+            raise AudioSplitBlockError(f"Audio split: unsupported audio format ({path.suffix or 'no extension'}). Formats: {supported}")
         return path
 
     def _extract_path_value(self, raw_value: Any) -> str:
