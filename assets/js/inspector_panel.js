@@ -1,3 +1,5 @@
+import { withProperties } from "./properties.js";
+
 /**
  * Role: Mounts the audio split block inspector panel frontend.
  * File Name: inspector_panel.js
@@ -90,17 +92,14 @@ function mountAudioSplitEditor(root, api, { actionName = "inspector_update_audio
  * @param {HTMLElement} root - Mounted Audio Split inspector root.
  * @param {object} api - Generic block UI API exposing block actions.
  */
-export function mount(root, api) {
-  mountAudioSplitEditor(root, api, { actionName: "inspector_update_audio_split" });
+function mountOwned(root, api) {
+  mountAudioSplitEditor(root, api, {
+    actionName: root.matches('[data-properties-surface="modal"]')
+      ? "modal_update_audio_split" : "inspector_update_audio_split",
+  });
 }
-registry.audio_split = {
-  /**
-   * Mount the Audio Split modal bindings using the modal update action.
-   *
-   * @param {HTMLElement} root - Mounted Audio Split modal root.
-   * @param {object} api - Generic block UI API exposing block actions.
-   */
-  mount(root, api) {
-    mountAudioSplitEditor(root, api, { actionName: "modal_update_audio_split" });
-  },
-};
+
+/** Keep the block behavior and add properties-only accessibility. */
+export function mount(root, ...args) {
+  return withProperties(mountOwned).call(this, root, ...args);
+}
