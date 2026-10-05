@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"
+     fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+     stroke-linejoin="round" role="img" aria-label="Audio split">
+  <title>Audio split</title>
+  <path d="M3 12h4.4c2.6 0 3.4-5 6-5h5.2"/>
+  <path d="M7.4 12c2.6 0 3.4 5 6 5h5.2"/>
+  <path d="m17.2 4.8 2.4 2.2-2.4 2.2"/>
+  <path d="m17.2 14.8 2.4 2.2-2.4 2.2"/>
+</svg>
